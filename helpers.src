@@ -1,0 +1,61 @@
+formatTable = function(input)
+    input = format_columns(input)
+    output = ""
+    fl = true
+    lines = input.split("\n")
+    for line in lines
+        if fl then
+            fl = false
+            output = output + "<color=#FF0000>" + line + "</color>"
+            if globals.DEBUG then output = output + "\n" //Newline breaks output in game, fuck knows why
+        else 
+            output = output + "<color=#808080>" + line + "</color>"
+            if globals.DEBUG then output = output + "\n" //Newline breaks output in game, fuck knows why
+        end if
+    end for
+    return output
+end function
+
+ipGenerate = function()
+    ip = ""
+    for i in range(1, 4)
+        ip = ip + floor(rnd() * 255)
+        if i < 4 then ip = ip + "."
+    end for
+    if not is_valid_ip(ip) then return randomIp()
+    return ip
+end function
+
+getUser = function(shell)
+    computer = shell.host_computer()
+    
+    rootFile = computer.File("/root")
+    if rootFile != null and rootFile.has_permission("w") then return "root"
+
+    homeFolder = computer.File("/home")
+	users = homeFolder.get_folders()
+	for user in users
+		if user.name() == "guest" then continue
+        if user.has_permission("w") then return user.name()
+	end for
+    guestFile = computer.File("/home/guest")
+    if guestFile != null and guestFile.has_permission("w") then return "guest"
+    return "unknown"
+
+end function
+
+_implantSource = "metax = include_lib(""/lib/metaxploit.so"")
+if not metax then metax = include_lib(current_path + ""metaxploit.so"")
+if not metax then metax = include_lib(current_path + ""/metaxploit.so"")
+metax.rshell_client("+ """" + get_shell().host_computer().public_ip()+ """" + ", 1222, ""bgprocess"")"
+
+createImplant = function()
+    shell = get_shell()
+    host = shell.host_computer()
+
+    host.touch(home_dir() + "/Config/Medusa", "implant.src")
+    implant = host.File(home_dir() + "/Config/Medusa/implant.src")
+
+    implant.set_content(_implantSource)
+    shell.build(home_dir() + "/Config/Medusa/implant.src", home_dir() + "/Config/Medusa", false)
+end function

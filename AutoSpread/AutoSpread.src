@@ -1,0 +1,118 @@
+Box = {}
+Box.IP = null
+Box.Router = null
+Box.Port = null
+
+AutoSpread = {}
+
+AutoSpread.findBox = function()
+    while true
+        ip = ipGenerate()
+        pingable = get_shell().ping(ip)
+        if pingable then
+            router = get_router(ip)
+            if router then
+                ports = router.used_ports
+                for port in ports
+                    portInfo = router.port_info(port)
+                    if portInfo.indexOf("ssh") != null or portInfo.indexOf("http") != null or portInfo.indexOf("students") != null or portInfo.indexOf("employees") != null or portInfo.indexOf("criminals") != null then
+                        box = new Box
+                        box.IP = ip
+                        box.Router = router
+                        box.Port = port.port_number()
+                        return box
+                    end if
+                end for
+            end if
+        end if
+    end while
+end function
+
+AutoSpread.getExploits = function(box)
+    result = {}
+    netSession = metax.net_use(box.IP, box.Port)
+	if not netSession then
+		print("Error: Cannot get net session.")
+		return result
+	end if
+    dump = netSession.dump_lib
+	if not dump then
+		print("Error: Cannot dump library.")
+		return result
+	end if
+
+    exploits = []
+    addresses = metax.scan(dump)
+	for mem in addresses
+		pair = {}
+		values = []
+		data = metax.scan_address(dump, mem)
+		strings = data.split("Unsafe check: ")
+		for string in strings
+			if string == strings[0] then continue
+			
+			value = string[string.indexOf("<b>")+3:string.indexOf("</b>")]
+			values = values + [value]
+		end for
+		pair["memory"] = mem
+		pair["values"] = values
+		exploits = exploits + [pair]
+	end for
+    result["dump"] = dump
+	result["exploits"] = exploits
+    return result
+end function
+
+AutoSpread.runExploit = function(dump, exploit)
+    bestShell = null
+
+    for value in exploit.values
+        shell = dump.overflow(exploit.memory, value, "pass")
+
+        if typeof(shell) == "shell" then
+            if getUser(shell) == "root" then return shell
+            if bestShell == null then bestShell = shell
+            
+            if getUser(bestShell) == "unknown" and getUser(shell) != "unknown" then bestShell = shell
+            if getUser(bestShell) == "guest" and (getUser(shell) != "guest" or getUser(shell) != "unknown") then bestShell = shell
+            break
+        end if
+    end for
+    return bestShell
+end function
+
+AutoSpread.spread = function()
+    box = self.findBox()
+    exploits = self.getExploits(box)
+    if not exploits.hasIndex("dump") then return false
+    if not exploits.hasIndex("exploits") then return false
+
+    for exploit in exploits.exploits
+        shell = self.runExploit(exploits.dump, exploit)
+        if shell != null then
+            if globals.DEBUG then
+                client = new Client
+                client.ID = clientManager.clients.len()
+                client.PublicIp = shell.host_computer().public_ip()
+                client.LocalIp 	= shell.host_computer().local_ip()
+                client.HostName = shell.host_computer().get_name()
+                client.Shell = shell
+                clientManager.AddClient(client)
+            else
+                upload = get_shell.scp("/lib/metaxploit.so", "/home/guest/", shell)
+                if typeof(upload) == "string" then 
+                    print("Error spreading too client ("+upload+")")
+                    continue
+                end if
+                upload = get_shell.scp(home_dir() + "/Config/Medusa/implant", "/home/guest/", shell)
+                if typeof(upload) == "string" then 
+                    print("Error spreading too client ("+upload+")")
+                    continue
+                end if
+                shell.launch("/home/guest/implant")
+            end if
+            break
+        end if
+    end for
+    return true
+end function

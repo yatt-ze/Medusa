@@ -1,0 +1,59 @@
+Command = {}
+Command.name = null
+Command.description = null
+Command.parameters = []
+Command.callback = null
+
+Command.help = function()
+    if self.parameters.len == 0 then return "<color=#FF0000>" + self.name + "</color> -> <color=#808080>" + self.description + "</color>"
+    help = "PARAMETER EXAMPLES REQUIRED DEFAULT\n"
+    for param in self.parameters
+        help = help + param.name + " " + param.examples + " "
+        if param.required then
+            help = help + "TRUE N/A\n"
+        else
+            help = help + "FALSE " +  param.default + "\n"
+        end if
+    end for
+    help = formatTable(help)
+    return help
+end function
+
+Command.execute = function(args)
+    parameters = self.parseArgs(args)
+    if parameters == false then return false
+    self.callback(parameters)
+    return true
+end function
+
+Command.parseArgs = function(args)
+    parameters = {}
+    if self.parameters.len() == 0 then return parameters
+
+    index = 0
+    for parameter in self.parameters
+        if parameter.required == true and not args.hasIndex(index) then return false
+        if not parameter.required and not args.hasIndex(index) then 
+            parameters[parameter.name] = parameter.default
+        else
+            parameters[parameter.name] = args[index]
+        end if
+        index = index + 1
+    end for
+    return parameters
+end function
+
+Command.New = function(options)
+    command = new Command
+    if options.hasIndex("name") then command.name = options.name
+    if not options.hasIndex("name") then return exit("Command missing required parameter: name")
+    if options.hasIndex("description") then command.description = options.description
+    if not options.hasIndex("description") then command.description = ""
+    if options.hasIndex("parameters") then command.parameters = options.parameters
+    if not options.hasIndex("parameters") then command.parameters = []
+    if options.hasIndex("callback") then command.callback = @options.callback
+    if not options.hasIndex("callback") then return exit("Command missing required parameter: callback")
+    return command
+end function
+
+

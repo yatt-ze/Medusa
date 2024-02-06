@@ -1,0 +1,57 @@
+import_code("./Lists/list1.src")
+import_code("./Lists/list2.src")
+import_code("./Lists/list3.src")
+import_code("./Lists/list4.src")
+import_code("./Lists/list5.src")
+import_code("./Lists/list6.src")
+import_code("./Lists/list7.src")
+import_code("./Lists/list8.src")
+import_code("./Lists/list9.src")
+import_code("./Lists/list10.src")
+import_code("./Lists/list11.src")
+import_code("./Lists/list12.src")
+import_code("./Lists/list13.src")
+import_code("./Lists/list14.src")
+import_code("./Lists/list15.src")
+import_code("./Lists/list16.src")
+
+Dictionary = {}
+Dictionary.index = 0
+Dictionary.passwords = {}
+
+Dictionary.init = function()
+    passwords = []
+    passwords = passwords + list1.split("\n")
+    passwords = passwords + list2.split("\n")
+    passwords = passwords + list3.split("\n")
+    passwords = passwords + list4.split("\n")
+    passwords = passwords + list5.split("\n")
+    passwords = passwords + list6.split("\n")
+    passwords = passwords + list7.split("\n")
+    passwords = passwords + list8.split("\n")
+    passwords = passwords + list9.split("\n")
+    passwords = passwords + list10.split("\n")
+    passwords = passwords + list11.split("\n")
+    passwords = passwords + list12.split("\n")
+    passwords = passwords + list13.split("\n")
+    passwords = passwords + list14.split("\n")
+    passwords = passwords + list15.split("\n")
+    passwords = passwords + list16.split("\n")
+
+    allPasswords = {}
+    handleLowerCase = function(password)
+        lowerPass = lower(password)
+        allPasswords[md5(password)] = password
+        allPasswords[md5(lowerPass)] = lowerPass
+    end function
+    for password in passwords
+        handleLowerCase(password.trim())
+    end for
+
+    self.passwords = allPasswords
+end function
+
+Dictionary.run = function(hash)
+    if self.passwords.hasIndex(hash) then return self.passwords[hash]
+    return false
+end function

@@ -1,0 +1,18 @@
+Parameter = {}
+Parameter.name = null
+Parameter.examples = null
+Parameter.required = false
+Parameter.default = null
+
+Parameter.New = function(options)
+    param = new Parameter
+    if options.hasIndex("name") then param.name = options.name
+    if not options.hasIndex("name") then return false
+    if options.hasIndex("examples") then param.examples = options.examples
+    if not options.hasIndex("examples") then param.examples = null
+    if options.hasIndex("required") then param.required = options.required
+    if not options.hasIndex("required") then param.required = false
+    if options.hasIndex("default") then param.default = options.default
+    if not options.hasIndex("default") then param.default = null
+    return param
+end function

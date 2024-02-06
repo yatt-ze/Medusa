@@ -1,0 +1,33 @@
+CommandManager = {}
+CommandManager.commands = {}
+
+// Registers a command with the manager
+CommandManager.registerCommand = function(command)
+    self.commands[command.name] = command
+end function
+
+// Unregisters a command with the manager
+CommandManager.unregisterCommand = function(command)
+    self.commands[command.name] = null
+end function
+
+// Returns a command by name
+CommandManager.GetCommand = function(name)
+    if self.commands.hasIndex(name) then return self.commands[name]
+    return false
+end function
+
+// Returns the command list
+CommandManager.GetCommands = function()
+    return self.commands
+end function
+
+// Executes a command
+CommandManager.executeCommand = function(str)
+    command = str.split(" ")[0]
+    args = slice(str.split(" "), 1)
+    if command == "" then return
+    if not(hasIndex(self.commands,command)) or self.commands[command] == null then return print("<color=#FF0000>[!] " + command + " is not a vaild command</color>")
+    command = self.commands[command]
+    if not command.execute(args) then return print("<color=#FF0000>[!] Missing Parameter!</color>")
+end function

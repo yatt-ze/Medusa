@@ -1,0 +1,94 @@
+if params.len == 1 and params[0] == "--debug" then globals.DEBUG = true else globals.DEBUG = false
+globals.VERSION = 0.2
+
+metax = include_lib("/lib/metaxploit.so")
+crypto = include_lib("/lib/crypto.so")
+
+import_code("./helpers.src")
+
+import_code("./Decipher/Dictionary.src")
+
+import_code("./Client/ClientManager.src")
+import_code("./Client/Client.src")
+
+import_code("./Command/CommandManager.src")
+import_code("./Command/Command.src")
+import_code("./Command/Parameter.src")
+
+import_code("./AutoSpread/AutoSpread.src")
+
+commandManager = new CommandManager
+clientManager = new ClientManager
+dictionary = new Dictionary
+
+import_code("./commands.src")
+
+// Initialization Stuff
+init = function()
+	if not metax 	then metax = include_lib("./metaxsploit.so")
+	if not crypto 	then crypto = include_lib("./crypto.so")
+	if not metax 	then exit("<color=#FF0000>[!] Can't find metaxsploit.so!</color>")
+	if not crypto 	then exit("<color=#FF0000>[!] Can't find crypto.so!</color>")
+
+	print("<color=#FFFF00>[*] Creating Required Files...</color>")
+	host = get_shell().host_computer()
+	if not host.File(home_dir() + "/Config/Medusa") then
+		print("<color=#FFFF00>    -> /Config/Medusa</color>")
+		host.create_folder(home_dir() + "/Config", "Medusa")
+	end if
+
+	if not host.File(home_dir() + "/Config/Medusa/implant") then
+		print("<color=#FFFF00>[*] Building Implant...</color>")
+		createImplant()
+	end if
+
+	print("<color=#FFFF00>[*] Initializing Dictionary...</color>")
+	dictionary.init()
+
+	if globals.DEBUG then
+		shell = get_shell("root", "test")
+		client = new Client
+		client.PublicIp = shell.host_computer().public_ip()
+		client.LocalIp 	= shell.host_computer().local_ip()
+		client.HostName = shell.host_computer().get_name()
+		client.Shell = shell
+		clientManager.AddClient(client)
+	else
+		shells = rshell_server(metax)
+		if typeof(shells) == "string" then exit("<color=#FF0000>[!] " + shells)
+		for shell in shells
+			client = new Client
+			client.PublicIp = shell.host_computer().public_ip()
+			client.LocalIp 	= shell.host_computer().local_ip()
+			client.HostName = shell.host_computer().get_name()
+			client.Shell = shell
+			clientManager.AddClient(client)
+		end for
+	end if
+end function
+
+checkForNewClients = function()
+	shells = rshell_server(metax)
+	if shells.len() != clientManager.clients.len() then
+		for shell in shells
+			client = new Client
+			client.PublicIp = shell.host_computer().public_ip()
+			client.LocalIp 	= shell.host_computer().local_ip()
+			client.HostName = shell.host_computer().get_name()
+			client.Shell = shell
+			clientManager.AddClient(client)
+		end for
+	end if
+end function
+
+// Entrypoint for medusa
+main = function()
+	init()
+	commandManager.executeCommand("clear")
+	while true
+		commandManager.executeCommand(user_input(active_user() + "@medusa:/# "))
+		if not globals.DEBUG then checkForNewClients()
+	end while
+end function
+
+main()

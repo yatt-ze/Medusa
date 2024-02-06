@@ -1,0 +1,23 @@
+ClientManager = {}
+ClientManager.clients = []
+
+// Adds a client to the client manager
+ClientManager.AddClient = function(client)
+    client.ID = self.clients.len()
+    for c in self.clients
+        if c.PublicIp == client.PublicIp and c.LocalIp == client.LocalIp then return
+    end for
+    self.clients.push(client)
+end function
+
+// Returns a client in the manager
+ClientManager.GetClient = function(clientIndex)
+    if hasIndex(self.clients, clientIndex) then return self.clients[clientIndex]
+    return false
+end function
+
+// Returns all clients in the manager
+ClientManager.GetClients = function()
+    return self.clients
+end function
+

@@ -103,14 +103,14 @@ AutoSpread.spread = function()
                 upload = get_shell.scp("/lib/metaxploit.so", "/home/guest/", shell)
                 if typeof(upload) == "string" then 
                     print("Error spreading too client ("+upload+")")
-                    continue
+                    return false
                 end if
                 upload = get_shell.scp(home_dir() + "/Config/Medusa/implant", "/home/guest/", shell)
                 if typeof(upload) == "string" then 
                     print("Error spreading too client ("+upload+")")
-                    continue
+                    return false
                 end if
-                if shell.launch("/home/guest/implant") == false then
+                if shell.launch("/home/guest/implant") == 0 then
                     client = new Client
                     client.ID = clientManager.clients.len()
                     client.PublicIp = shell.host_computer().public_ip()
@@ -119,10 +119,15 @@ AutoSpread.spread = function()
                     client.Type = "Partial"
                     client.Shell = shell
                     clientManager.AddClient(client)
+                    print("<color=#FFFF00>[PARTIAL] Spread to </color><color=#808080>" + box.IP + "</color>")
+                    return true
+                else
+                    print("<color=#00FF00>[FULL] Spread to </color><color=#808080>" + box.IP + "</color>")
+                    return true
                 end if
             end if
             break
         end if
     end for
-    return true
+    return false
 end function

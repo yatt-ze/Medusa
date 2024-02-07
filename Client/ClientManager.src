@@ -6,6 +6,7 @@ ClientManager.GetFullClientCount = function()
     for client in self.clients
         if client.Type == "Full" then count = count + 1
     end for
+    return count
 end function
 
 // Adds a client to the client manager

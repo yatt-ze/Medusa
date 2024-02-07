@@ -51,6 +51,7 @@ init = function()
 		client.PublicIp = shell.host_computer().public_ip()
 		client.LocalIp 	= shell.host_computer().local_ip()
 		client.HostName = shell.host_computer().get_name()
+		client.Type = "Partial"
 		client.Shell = shell
 		clientManager.AddClient(client)
 	else
@@ -61,6 +62,7 @@ init = function()
 			client.PublicIp = shell.host_computer().public_ip()
 			client.LocalIp 	= shell.host_computer().local_ip()
 			client.HostName = shell.host_computer().get_name()
+			client.Type = "Full"
 			client.Shell = shell
 			clientManager.AddClient(client)
 		end for
@@ -69,12 +71,14 @@ end function
 
 checkForNewClients = function()
 	shells = rshell_server(metax)
-	if shells.len() != clientManager.clients.len() then
+	if shells.len() != clientManager.GetFullClientCount() then
+		clientManager.clients = []
 		for shell in shells
 			client = new Client
 			client.PublicIp = shell.host_computer().public_ip()
 			client.LocalIp 	= shell.host_computer().local_ip()
 			client.HostName = shell.host_computer().get_name()
+			client.Type = "Full"
 			client.Shell = shell
 			clientManager.AddClient(client)
 		end for

@@ -1,6 +1,13 @@
 ClientManager = {}
 ClientManager.clients = []
 
+ClientManager.GetFullClientCount = function()
+    count = 0
+    for client in self.clients
+        if client.Type == "Full" then count = count + 1
+    end for
+end function
+
 // Adds a client to the client manager
 ClientManager.AddClient = function(client)
     client.ID = self.clients.len()

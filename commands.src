@@ -296,9 +296,9 @@ commandManager.registerCommand(Command.New({
 }))
 
 clientsCommandCallback = function(args)
-    computers = "ID PUBLIC_IP LOCAL_IP USERNAME HOSTNAME\n"
+    computers = "ID TYPE PUBLIC_IP LOCAL_IP USERNAME HOSTNAME\n"
     for client in clientManager.GetClients()
-        computers = computers + client.ID + " " + client.PublicIp + " " + client.LocalIp + " " + getUser(client.Shell) + " " + client.HostName + "\n"
+        computers = computers + client.ID + " " + client.Type + " " + client.PublicIp + " " + client.LocalIp + " " + getUser(client.Shell) + " " + client.HostName + "\n"
     end for
     computers = formatTable(computers)
     print(computers)

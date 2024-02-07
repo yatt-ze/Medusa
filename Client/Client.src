@@ -4,6 +4,7 @@ Client.PublicIp = null
 Client.LocalIp = null
 Client.HostName = null
 Client.Shell = null
+Client.Type = null
 
 // Deletes Logs on the client
 Client.deleteLogs = function()

@@ -9,6 +9,9 @@ deleteclientCallback = function(args)
                 if parsedItem[4] == "bgprocess" then
                     client.Shell.host_computer().close_program(parsedItem[1].val)
                 end if
+                if parsedItem[4] == "rshell_client" then
+                    client.Shell.host_computer().close_program(parsedItem[1].val)
+                end if
             end for
         end for
     else
@@ -26,7 +29,7 @@ deleteclientCallback = function(args)
     end if
 end function
 commandManager.registerCommand(Command.New({
-    "name": "kill",
+    "name": "delclient",
     "description": "Deletes a client",
     "parameters": [
         Parameter.New({

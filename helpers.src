@@ -6,11 +6,9 @@ formatTable = function(input)
     for line in lines
         if fl then
             fl = false
-            output = output + "<color=#FF0000>" + line + "</color>"
-            if globals.DEBUG then output = output + "\n" //Newline breaks output in game, fuck knows why
+            output = output + "<color=#FF0000>" + line + "</color>/n"
         else 
-            output = output + "<color=#808080>" + line + "</color>"
-            if globals.DEBUG then output = output + "\n" //Newline breaks output in game, fuck knows why
+            output = output + "<color=#808080>" + line + "</color>/n"
         end if
     end for
     return output

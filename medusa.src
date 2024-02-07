@@ -72,7 +72,6 @@ end function
 checkForNewClients = function()
 	shells = rshell_server(metax)
 	if shells.len() != clientManager.GetFullClientCount() then
-		clientManager.clients = []
 		for shell in shells
 			client = new Client
 			client.PublicIp = shell.host_computer().public_ip()

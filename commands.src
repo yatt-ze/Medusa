@@ -341,7 +341,7 @@ helpCommandCallback = function(args)
         help = "COMMAND DESCRIPTION PARAMETERS\n"
         for command in commandManager.GetCommands()
             command = command.value
-            help = help + command.name + " " + command.description.replace(" ", "_")
+            help = help + command.name + " " + command.description.replace(" ", "@")
             if command.parameters.len > 0 then
                 help = help + " "
                 for param in command.parameters

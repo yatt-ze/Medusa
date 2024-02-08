@@ -11,7 +11,7 @@ formatTable = function(input)
             output = output + "<color=#808080>" + line + "</color>/n"
         end if
     end for
-    return output
+    return output.replace("@", " ")
 end function
 
 ipGenerate = function()

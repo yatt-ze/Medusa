@@ -1,7 +1,7 @@
 clientsCommandCallback = function(args)
     computers = "ID TYPE PUBLIC_IP LOCAL_IP USERNAME HOSTNAME\n"
     for client in clientManager.GetClients()
-        computers = computers + client.ID + " " + client.Type + " " + client.PublicIp + " " + client.LocalIp + " " + getUser(client.Shell) + " " + client.HostName + "\n"
+        computers = computers + client.ID + " " + client.Type + " " + client.PublicIp + " " + client.LocalIp + " " + client.UserName + " " + client.HostName + "\n"
     end for
     computers = formatTable(computers)
     print(computers)

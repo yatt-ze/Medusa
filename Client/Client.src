@@ -6,6 +6,7 @@ Client.Computer = null
 Client.PublicIp = null
 Client.LocalIp = null
 Client.HostName = null
+Client.UserName = null
 
 
 // Deletes Logs on the client

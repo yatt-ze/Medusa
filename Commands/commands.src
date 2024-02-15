@@ -6,6 +6,7 @@ import_code("./spread.src")
 import_code("./dellogs.src")
 import_code("./grab.src")
 import_code("./exit.src")
+import_code("./clients.src")
 import_code("./clear.src")
 
 

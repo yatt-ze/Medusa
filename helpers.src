@@ -6,9 +6,9 @@ formatTable = function(input)
     for line in lines
         if fl then
             fl = false
-            output = output + "<color=#FF0000>" + line + "</color>/n"
+            output = output + "<color=#FF0000>" + line + "</color>\n"
         else 
-            output = output + "<color=#808080>" + line + "</color>/n"
+            output = output + "<color=#808080>" + line + "</color>\n"
         end if
     end for
     return output.replace("@", " ")
@@ -46,7 +46,6 @@ _implantSource = "metax = include_lib(""/lib/metaxploit.so"")
 if not metax then metax = include_lib(current_path + ""metaxploit.so"")
 if not metax then metax = include_lib(current_path + ""/metaxploit.so"")
 metax.rshell_client("+ """" + get_shell().host_computer().public_ip()+ """" + ", 1222, ""bgprocess"")"
-
 createImplant = function()
     shell = get_shell()
     host = shell.host_computer()

@@ -99,6 +99,7 @@ AutoSpread.spread = function()
                 client.Type = "Partial"
                 client.Shell = shell
                 clientManager.AddClient(client)
+                return true
             else
                 upload = get_shell.scp("/lib/metaxploit.so", "/home/guest/", shell)
                 if typeof(upload) == "string" then 

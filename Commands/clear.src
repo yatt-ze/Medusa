@@ -1,0 +1,25 @@
+clearCommandCallback = function(args)
+    clear_screen()
+    info = "CREATED BY: YATTAZE | <color=#00FF00>VERSION " + globals.VERSION + "</color>"
+    if globals.DEBUG then info = info + " | <color=#FF0000>DEBUG MODE ACTIVE</color>"
+    clear_screen()
+    print("<color=#FF0000>                                                                              </color>")
+    print("<color=#FF0000>                                         88                                   </color>")
+    print("<color=#FF0000>                                         88                                   </color>")
+    print("<color=#FF0000>                                         88                                   </color>")
+    print("<color=#FF0000>  88,dPYba,,adPYba,   ,adPPYba,  ,adPPYb,88 88       88 ,adPPYba, ,adPPYYba,  </color>")
+    print("<color=#FF0000>  88P'   '88'    '8a a8P_____88 a8'    `Y88 88       88 I8[    '' ''     `Y8  </color>")
+    print("<color=#FF0000>  88      88      88 8PP''''''' 8b       88 88       88  `'Y8ba,  ,adPPPPP88  </color>")
+    print("<color=#FF0000>  88      88      88 '8b,   ,aa '8a,   ,d88 '8a,   ,a88 aa    ]8I 88,    ,88  </color>")
+    print("<color=#FF0000>  88      88      88  `'Ybbd8''  `'8bbdP'Y8  `'YbbdP'Y8 `'YbbdP'' `'8bbdP'Y8  </color>")
+    print("<color=#FF0000>                                                                              </color>")
+    print("")
+    print(info)
+    print("")
+    clientsCommandCallback()
+end function
+commandManager.registerCommand(Command.New({
+    "name": "clear",
+    "description": "Clears the screen",
+    "callback": @ clearCommandCallback
+}))

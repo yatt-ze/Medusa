@@ -21,7 +21,7 @@ commandManager = new CommandManager
 clientManager = new ClientManager
 dictionary = new Dictionary
 
-import_code("./commands.src")
+import_code("./Commands/commands.src")
 
 // Initialization Stuff
 init = function()

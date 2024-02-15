@@ -1,0 +1,21 @@
+spreadCallback = function(args)
+	i = 1
+	while i <= args.count.val
+		while AutoSpread.spread() == false
+			wait(0.1)
+		end while
+		i = i + 1
+	end while
+end function
+commandManager.registerCommand(Command.New({
+    "name": "spread",
+    "description": "Auto Spreader",
+    "parameters": [
+        Parameter.New({
+            "name": "count",
+            "examples": "5",
+            "required": true
+        })
+    ],
+    "callback": @spreadCallback
+}))

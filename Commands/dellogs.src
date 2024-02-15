@@ -1,0 +1,24 @@
+delLogsCallback = function(args)
+    if globals.DEBUG then print("<color=#FF0000>[!] WARNING: Greybel Interpreter does not have a system.log file!</color>")
+    if args.client_id.lower() == "all" then
+        for client in clientManager.GetClients()
+            client.deleteLogs()
+        end for
+    else
+        client = clientManager.GetClient(args.client_id.val)
+        if not client then return print("<color=#FF0000>[!] There is no client with that ID</color>")
+        client.deleteLogs()
+    end if
+end function
+commandManager.registerCommand(Command.New({
+    "name": "dellogs",
+    "description": "Deletes logs on clients",
+    "parameters": [
+        Parameter.New({
+            "name": "client_id",
+            "examples": "0/all",
+            "required": true
+        })
+    ],
+    "callback": @delLogsCallback
+}))

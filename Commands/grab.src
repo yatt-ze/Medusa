@@ -1,0 +1,86 @@
+grabPasswords = function(client)
+    output = ""
+    passwords = client.getPasswords()
+    if passwords.len > 0 then
+        for pass in passwords
+            username = pass.split(":")[0]
+            password = dictionary.run(pass.split(":")[1])
+            output = output + client.ID + " " + username + " " + password + "\n"
+        end for
+    end if
+    return output
+end function
+
+grabBanks = function(client)
+    output = ""
+    banks = client.getBanks()
+    for bank in banks
+        username = bank.split(":")[0]
+        password = dictionary.run(bank.split(":")[1])
+        output = output + client.ID + " " + username + " " + password + "\n"
+    end for
+    return output
+end function
+
+grabMails = function(client)
+    output = ""
+    mails = client.getMails()
+    for mail in mails
+        username = mail.split(":")[0]
+        password = dictionary.run(mail.split(":")[1])
+        output = output + client.ID + " " + username + " " + password + "\n"
+    end for
+
+end function
+
+grabCommandCallback = function(args)
+    if args.info != "passwords" and args.info != "banks" and args.info != "mails" then return print("<color=#FF0000>Info must be either</color><color=#808080>: passwords, mails, or banks</color>")
+    if args.client_id == "all" then
+        output = "CLIENT_ID USERNAME HASH/PASSWORD\n"
+        for client in clientManager.GetClients()
+            if args.info == "passwords" then 
+                output = output + grabPasswords(client)
+            end if
+            if args.info == "banks" then 
+                output = output + grabBanks(client)
+            end if
+            if args.info == "mails" then 
+                output = output + grabMails(client)
+            end if
+        end for
+        print(formatTable(output))
+    else
+        client = clientManager.GetClient(args.client_id.val)
+        if not client then return print("<color=#FF0000>[!] There is no client with that ID</color>")
+        output = "CLIENT_ID USERNAME HASH/PASSWORD\n"
+        if args.info == "passwords" then 
+            output = output + grabPasswords(client)
+        end if
+        if args.info == "banks" then 
+            output = output + grabBanks(client)
+        end if
+        if args.info == "mails" then 
+            output = output + grabMails(client)
+        end if
+        print(formatTable(output))
+    end if
+end function
+
+commandManager.registerCommand(Command.New({
+    "name": "grab",
+    "description": "Grabs info from clients",
+    "parameters": [
+        Parameter.New({
+            "name": "info",
+            "examples": "passwords/banks/mails",
+            "required": true,
+        }),
+        Parameter.New({
+            "name": "client_id",
+            "required": false,
+            "examples": "0/all",
+            "default": "all"
+        })
+    ],
+    "callback": @grabCommandCallback
+}))

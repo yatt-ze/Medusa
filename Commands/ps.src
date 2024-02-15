@@ -1,0 +1,39 @@
+psCallback = function(args)
+    client = clientManager.GetClient(args.client_id.val)
+    if not client then return print("<color=#FF0000>[!] There is no client with that ID</color>")
+
+    host = client.Shell.host_computer()
+    procs = host.show_procs
+    list = procs.split(char(10))[1:]
+    processes = []
+    for item in list
+        parsedItem = item.split(" ")
+        process = {}
+        process.user = parsedItem[0]
+        process.pid = parsedItem[1]
+        process.cpu = parsedItem[2]
+        process.mem = parsedItem[3]
+        process.command = parsedItem[4]
+        processes.push(process)
+    end for
+
+    output = "USER PID CPU MEMORY COMMAND\n"
+    for process in processes
+        output = output + process.user + " " + process.pid + " " + process.cpu + "% " + process.mem + "Mb " + process.command + "\n"
+    end for
+    print(formatTable(output))
+    return processes
+end function
+
+commandManager.registerCommand(Command.New({
+    "name": "ps",
+    "description": "Lists Processes on a client",
+    "parameters": [
+        Parameter.New({
+            "name": "client_id",
+            "examples": "0",
+            "required": true
+        })
+    ],
+    "callback": @psCallback
+}))

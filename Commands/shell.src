@@ -1,0 +1,17 @@
+shellCallback = function(args)
+    client = clientManager.GetClient(args.client_id.val)
+    if not client then return print("<color=#FF0000>[!] There is no client with that ID</color>")
+    client.Shell.start_terminal()
+end function
+commandManager.registerCommand(Command.New({
+    "name": "shell",
+    "description": "Launches a shell on the target computer",
+    "parameters": [
+        Parameter.New({
+            "name": "client_id",
+            "examples": "0",
+            "required": true
+        })
+    ],
+    "callback": @shellCallback
+}))

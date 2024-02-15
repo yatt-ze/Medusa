@@ -1,0 +1,51 @@
+import_code("./delclient.src")
+import_code("./ps.src")
+import_code("./kill.src")
+import_code("./shell.src")
+import_code("./spread.src")
+import_code("./dellogs.src")
+import_code("./grab.src")
+import_code("./exit.src")
+import_code("./clear.src")
+
+
+helpCommandCallback = function(args)
+    if args.command == "all" then
+        help = "COMMAND DESCRIPTION PARAMETERS\n"
+        for command in commandManager.GetCommands()
+            command = command.value
+            help = help + command.name + " " + command.description.replace(" ", "@")
+            if command.parameters.len > 0 then
+                help = help + " "
+                for param in command.parameters
+                    help = help + param.name + ","
+                end for
+                help = help + "\n"
+            else
+                help = help + " N/A\n"
+            end if
+        end for
+        output = formatTable(help)
+        print(output)
+    else
+        command = commandManager.GetCommand(args.command)
+        if not command then 
+            print("<color=#FF0000>[!] " + args.command + " is not a command")
+            return
+        end if
+        print(command.help())
+    end if
+end function
+commandManager.registerCommand(Command.New({
+    "name": "help",
+    "description": "Shows this help prompt",
+    "parameters": [
+        Parameter.New({
+            "name": "command",
+            "required": false,
+            "examples": "grab",
+            "default": "all"
+        })
+    ],
+    "callback": @helpCommandCallback
+}))

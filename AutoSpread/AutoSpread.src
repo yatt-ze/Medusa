@@ -74,7 +74,7 @@ AutoSpread.runExploit = function(dump, exploit)
             if bestShell == null then bestShell = shell
             
             if getUser(bestShell) == "unknown" and getUser(shell) != "unknown" then bestShell = shell
-            if getUser(bestShell) == "guest" and (getUser(shell) != "guest" or getUser(shell) != "unknown") then bestShell = shell
+            if getUser(bestShell) == "guest" and (getUser(shell) != "guest" and getUser(shell) != "unknown") then bestShell = shell
             break
         end if
     end for

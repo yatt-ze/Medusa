@@ -1,37 +1,38 @@
 Client = {}
 Client.ID = null
+Client.Type = null
+Client.Shell = null
+Client.Computer = null
 Client.PublicIp = null
 Client.LocalIp = null
 Client.HostName = null
-Client.Shell = null
-Client.Type = null
+
 
 // Deletes Logs on the client
 Client.deleteLogs = function()
-	computer = self.Shell.host_computer()
-	logFile = computer.File("/var/system.log")
+	logFile = self.Computer.File("/var/system.log")
 	if logFile then
-		computer.touch("/home/guest/", "t")
-		tFile = computer.File("/home/guest/t")
+		self.Computer.touch("/home/guest/", "t")
+		tFile = self.Computer.File("/home/guest/t")
 		if tFile then 
 			tFile.move("/etc/", "system.log")
 		end if
-		return print("<color=#00FF00>[+] Deleted logs on client </color><color=#808080>" + self.ID + "</color>")
+		return print(("Deleted logs on client </color><color=#808080>" + self.ID).success())
 	end if
-	return print("<color=#FF0000>[+] Failed to delete logs on client </color><color=#808080>" + self.ID + "</color>")
+	return print(("Failed to delete logs on client </color><color=#808080>" + self.ID).error())
 end function
 
 // Returns the contents of /etc/passwd as a list
 Client.getPasswords = function()
 	passwords = []
-	passwordFile = self.Shell.host_computer.File("/etc/passwd")
+	passwordFile = self.Computer.File("/etc/passwd")
 	if passwordFile != null and passwordFile.has_permission("r") then
 		contents = passwordFile.get_content()
 		for line in contents.split("\n")
 			if line != "" then passwords.push(line)
 		end for
 	else
-		print("<color=#FF0000>[CLIENT " + self.ID + "] No Permisions")
+		print(("[CLIENT " + self.ID + "] No Permisions").error())
 	end if
 	return passwords
 end function
@@ -39,10 +40,10 @@ end function
 // Returns all bank credentials on the client as a list
 Client.getBanks = function()
 	banks = []
-	homeFolder = self.Shell.host_computer().File("/home")
+	homeFolder = self.Computer.File("/home")
 	users = homeFolder.get_folders()
 	for user in users
-		configFolder = self.Shell.host_computer().File(user.path() + "/Config")
+		configFolder = self.Computer.File(user.path() + "/Config")
 		for file in configFolder.get_files()
 			if file.name() == "Bank.txt" and file.has_permission("r") then 
 				for line in file.get_content().split("\n")
@@ -57,10 +58,10 @@ end function
 // Returns all mail credentials on the client as a list
 Client.getMails = function()
 	mails = []
-	homeFolder = self.Shell.host_computer().File("/home")
+	homeFolder = self.Computer.File("/home")
 	users = homeFolder.get_folders()
 	for user in users
-		configFolder = self.Shell.host_computer().File(user.path() + "/Config")
+		configFolder = self.Computer.File(user.path() + "/Config")
 		for file in configFolder.get_files()
 			if file.name() == "Mail.txt" and file.has_permission("r") then 
 				for line in file.get_content().split("\n")

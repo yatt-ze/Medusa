@@ -9,9 +9,32 @@ ClientManager.GetFullClientCount = function()
     return count
 end function
 
-// Adds a client to the client manager
-ClientManager.AddClient = function(client)
+// Adds a full client to the client manager
+ClientManager.AddFullClient = function(client)
+    client = new Client
     client.ID = self.clients.len()
+    client.Type = "Full"
+    client.Shell = shell
+    client.Computer = shell.host_computer()
+    client.PublicIp = shell.host_computer().public_ip()
+    client.LocalIp 	= shell.host_computer().local_ip()
+    client.HostName = shell.host_computer().get_name()
+    for c in self.clients
+        if c.PublicIp == client.PublicIp and c.LocalIp == client.LocalIp then return
+    end for
+    self.clients.push(client)
+end function
+
+// Adds a partial client to the client manager
+ClientManager.AddPartialClient = function(shell)
+    client = new Client
+    client.ID = self.clients.len()
+    client.Type = "Partial"
+    client.Shell = shell
+    client.Computer = shell.host_computer()
+    client.PublicIp = shell.host_computer().public_ip()
+    client.LocalIp 	= shell.host_computer().local_ip()
+    client.HostName = shell.host_computer().get_name()
     for c in self.clients
         if c.PublicIp == client.PublicIp and c.LocalIp == client.LocalIp then return
     end for

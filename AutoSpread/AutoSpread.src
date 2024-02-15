@@ -91,14 +91,7 @@ AutoSpread.spread = function()
         shell = self.runExploit(exploits.dump, exploit)
         if shell != null then
             if globals.DEBUG then
-                client = new Client
-                client.ID = clientManager.clients.len()
-                client.PublicIp = shell.host_computer().public_ip()
-                client.LocalIp 	= shell.host_computer().local_ip()
-                client.HostName = shell.host_computer().get_name()
-                client.Type = "Partial"
-                client.Shell = shell
-                clientManager.AddClient(client)
+                clientManager.AddPartialClient(shell)
                 return true
             else
                 upload = get_shell.scp("/lib/metaxploit.so", "/home/guest/", shell)
@@ -112,14 +105,7 @@ AutoSpread.spread = function()
                     return false
                 end if
                 if shell.launch("/home/guest/implant") == 0 then
-                    client = new Client
-                    client.ID = clientManager.clients.len()
-                    client.PublicIp = shell.host_computer().public_ip()
-                    client.LocalIp 	= shell.host_computer().local_ip()
-                    client.HostName = shell.host_computer().get_name()
-                    client.Type = "Partial"
-                    client.Shell = shell
-                    clientManager.AddClient(client)
+                    clientManager.AddPartialClient(shell)
                     print("<color=#FFFF00>[PARTIAL] Spread to </color><color=#808080>" + box.IP + "</color>")
                     return true
                 else

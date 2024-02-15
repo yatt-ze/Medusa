@@ -2,7 +2,7 @@ psCallback = function(args)
     client = clientManager.GetClient(args.client_id.val)
     if not client then return print("<color=#FF0000>[!] There is no client with that ID</color>")
 
-    host = client.Shell.host_computer()
+    host = client.Computer
     procs = host.show_procs
     list = procs.split(char(10))[1:]
     processes = []

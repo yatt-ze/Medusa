@@ -53,5 +53,5 @@ end function
 
 Dictionary.run = function(hash)
     if self.passwords.hasIndex(hash) then return self.passwords[hash]
-    return false
+    return hash
 end function

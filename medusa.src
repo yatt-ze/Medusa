@@ -1,9 +1,11 @@
 if params.len == 1 and params[0] == "--debug" then globals.DEBUG = true else globals.DEBUG = false
-globals.VERSION = 0.2
+globals.VERSION = 1.0
 
 metax = include_lib("/lib/metaxploit.so")
 crypto = include_lib("/lib/crypto.so")
 
+import_code("./Extensions/colour.src")
+import_code("./Extensions/string.src")
 import_code("./helpers.src")
 
 import_code("./Decipher/Dictionary.src")
@@ -27,44 +29,33 @@ import_code("./Commands/commands.src")
 init = function()
 	if not metax 	then metax = include_lib("./metaxsploit.so")
 	if not crypto 	then crypto = include_lib("./crypto.so")
-	if not metax 	then exit("<color=#FF0000>[!] Can't find metaxsploit.so!</color>")
-	if not crypto 	then exit("<color=#FF0000>[!] Can't find crypto.so!</color>")
+	if not metax 	then exit("Can't find metaxsploit.so!".error())
+	if not crypto 	then exit("Can't find crypto.so!".error())
 
-	print("<color=#FFFF00>[*] Creating Required Files...</color>")
+	
 	host = get_shell().host_computer()
 	if not host.File(home_dir() + "/Config/Medusa") then
-		print("<color=#FFFF00>    -> /Config/Medusa</color>")
+		print("Creating Required Files...".info())
+		print("    -> /Config/Medusa".colour("#FFFF00"))
 		host.create_folder(home_dir() + "/Config", "Medusa")
 	end if
 
 	if not host.File(home_dir() + "/Config/Medusa/implant") then
-		print("<color=#FFFF00>[*] Building Implant...</color>")
+		print("Building Implant...".info())
 		createImplant()
 	end if
 
-	print("<color=#FFFF00>[*] Initializing Dictionary...</color>")
+	print("Initializing Dictionary...".info())
 	dictionary.init()
 
 	if globals.DEBUG then
 		shell = get_shell("root", "test")
-		client = new Client
-		client.PublicIp = shell.host_computer().public_ip()
-		client.LocalIp 	= shell.host_computer().local_ip()
-		client.HostName = shell.host_computer().get_name()
-		client.Type = "Partial"
-		client.Shell = shell
-		clientManager.AddClient(client)
+		clientManager.AddPartialClient(shell)
 	else
 		shells = rshell_server(metax)
-		if typeof(shells) == "string" then exit("<color=#FF0000>[!] " + shells)
+		if typeof(shells) == "string" then exit(("[!] " + shells).colour(Colour.Red))
 		for shell in shells
-			client = new Client
-			client.PublicIp = shell.host_computer().public_ip()
-			client.LocalIp 	= shell.host_computer().local_ip()
-			client.HostName = shell.host_computer().get_name()
-			client.Type = "Full"
-			client.Shell = shell
-			clientManager.AddClient(client)
+			clientManager.AddFullClient(shell)
 		end for
 	end if
 end function
@@ -73,13 +64,7 @@ checkForNewClients = function()
 	shells = rshell_server(metax)
 	if shells.len() != clientManager.GetFullClientCount() then
 		for shell in shells
-			client = new Client
-			client.PublicIp = shell.host_computer().public_ip()
-			client.LocalIp 	= shell.host_computer().local_ip()
-			client.HostName = shell.host_computer().get_name()
-			client.Type = "Full"
-			client.Shell = shell
-			clientManager.AddClient(client)
+			clientManager.AddFullClient(shell)
 		end for
 	end if
 end function

@@ -1,0 +1,15 @@
+string.colour = function(hexcode)
+    if hexcode isa string then return "<color="+hexcode+">"+self+"</color>"
+end function
+
+string.error = function()
+    return ("[!] " + self).colour("#FF0000")
+end function
+
+string.info = function()
+    return ("[*] " + self).colour("#FFFF00")
+end function
+
+string.success = function()
+    return ("[+] " + self).colour("#00FF00")
+end function

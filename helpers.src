@@ -6,9 +6,9 @@ formatTable = function(input)
     for line in lines
         if fl then
             fl = false
-            output = output + "<color=#FF0000>" + line + "</color>\n"
+            output = output + line.colour("#FF0000") + "\n"
         else 
-            output = output + "<color=#808080>" + line + "</color>\n"
+            output = output + line.colour("#808080") + "\n"
         end if
     end for
     return output.replace("@", " ")
@@ -26,7 +26,6 @@ end function
 
 getUser = function(shell)
     computer = shell.host_computer()
-    
     rootFile = computer.File("/root")
     if rootFile != null and rootFile.has_permission("w") then return "root"
 
@@ -39,7 +38,6 @@ getUser = function(shell)
     guestFile = computer.File("/home/guest")
     if guestFile != null and guestFile.has_permission("w") then return "guest"
     return "unknown"
-
 end function
 
 _implantSource = "metax = include_lib(""/lib/metaxploit.so"")

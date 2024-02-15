@@ -31,7 +31,7 @@ helpCommandCallback = function(args)
     else
         command = commandManager.GetCommand(args.command)
         if not command then 
-            print("<color=#FF0000>[!] " + args.command + " is not a command")
+            print((args.command + " is not a command").error())
             return
         end if
         print(command.help())

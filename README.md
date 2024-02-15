@@ -8,6 +8,7 @@ An rshell manager for the game Grey Hack
   - Launch a Shell
   - Delete a Client
   - Delete Logs on Clients
+  - Grabbing of User / Bank and Mail Passwords
 - AutoSpreading
 - Auto Cracking of NPC Passwords
 

@@ -1,5 +1,5 @@
 if params.len == 1 and params[0] == "--debug" then globals.DEBUG = true else globals.DEBUG = false
-globals.VERSION = 1.0
+globals.VERSION = "1.0.0"
 
 metax = include_lib("/lib/metaxploit.so")
 crypto = include_lib("/lib/crypto.so")

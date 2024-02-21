@@ -11,7 +11,7 @@ formatTable = function(input)
             output = output + line.colour("#808080") + "\n"
         end if
     end for
-    return output.replace("@", " ")
+    return output.replace("%", " ")
 end function
 
 ipGenerate = function()

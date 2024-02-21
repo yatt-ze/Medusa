@@ -90,6 +90,7 @@ AutoSpread.spread = function()
     for exploit in exploits.exploits
         shell = self.runExploit(exploits.dump, exploit)
         if shell != null then
+            result = null
             if globals.DEBUG then
                 clientManager.AddPartialClient(shell)
                 return true
@@ -104,7 +105,14 @@ AutoSpread.spread = function()
                     print("Error spreading to client ("+upload+")")
                     return false
                 end if
-                if shell.launch("/home/guest/implant") == 0 then
+                
+                rootPassword = clientManager.CreateTempClient(shell).getUserPassword("root")
+                if rootPassword != null then 
+                    result = shell.launch("/home/guest/implant", rootPassword)
+                else
+                    result = shell.launch("/home/guest/implant")
+                end if
+                if result == 0 then
                     clientManager.AddPartialClient(shell)
                     print("<color=#FFFF00>[PARTIAL] Spread to </color><color=#808080>" + box.IP + "</color>")
                     return true

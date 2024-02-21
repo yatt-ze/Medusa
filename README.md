@@ -21,4 +21,4 @@ An rshell manager for the game Grey Hack
 - [ ] Grabbing of Mission Files
 - [ ] Monitor Shells (Process / Filesystem Changes)
 - [x] shell.launch command
-- [ ] Auto Escalation
+- [x] Auto Escalation

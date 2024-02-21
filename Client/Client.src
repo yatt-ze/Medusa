@@ -38,6 +38,17 @@ Client.getPasswords = function()
 	return passwords
 end function
 
+// Returns the password of a specific username
+Client.getUserPassword = function(user)
+	passwords = self.getPasswords()
+	for pass in passwords
+		username = pass.split(":")[0]
+		password = dictionary.run(pass.split(":")[1])
+		if user == username then return password
+	end for
+	return null
+end function
+
 // Returns all bank credentials on the client as a list
 Client.getBanks = function()
 	banks = []

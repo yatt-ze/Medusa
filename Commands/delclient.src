@@ -1,7 +1,7 @@
 delClientAll = function()
     clients = clientManager.GetClients()
     for client in clients
-        host = client.Shell.Computer
+        host = client.Computer
         list = host.show_procs().split(char(10))[1:]
         for item in list
             parsedItem = item.split(" ")

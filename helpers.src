@@ -40,7 +40,15 @@ getUser = function(shell)
     return "unknown"
 end function
 
-_implantSource = "metax = include_lib(""/lib/metaxploit.so"")
+_implantSource = "
+runAsRoot = function()
+    shell = get_shell(""root"", params[0])
+    print(""Relaunching as root with password"" + params[0])
+    shell.launch(""/home/guest/implant"")
+    exit()
+end function
+if params.len == 1 and params[0] isa string then runAsRoot()
+metax = include_lib(""/lib/metaxploit.so"")
 if not metax then metax = include_lib(current_path + ""/metaxploit.so"")
 metax.rshell_client("+ """" + get_shell().host_computer().public_ip()+ """" + ", 1222, ""bgprocess"")"
 

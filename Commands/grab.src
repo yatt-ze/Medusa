@@ -32,10 +32,16 @@ grabMails = function(client)
     end for
 end function
 
+grabChecks = function(info)
+    validOptions = ["passwords", "banks", "mails"]
+    if validOptions.indexOf(info) != null then return true
+    return false
+end function
+
 grabCommandCallback = function(args)
-    if args.info != "passwords" and args.info != "banks" and args.info != "mails" then return print("<color=#FF0000>Info must be either</color><color=#808080>: passwords, mails, or banks</color>")
+    if grabChecks(args.info) == false then return print("Parameter 'Info' was not valid".error())
+    output = "CLIENT_ID USERNAME HASH/PASSWORD\n"
     if args.client_id == "all" then
-        output = "CLIENT_ID USERNAME HASH/PASSWORD\n"
         for client in clientManager.GetClients()
             if args.info == "passwords" then 
                 output = output + grabPasswords(client)
@@ -51,7 +57,6 @@ grabCommandCallback = function(args)
     else
         client = clientManager.GetClient(args.client_id.val)
         if not client then return print("<color=#FF0000>[!] There is no client with that ID</color>")
-        output = "CLIENT_ID USERNAME HASH/PASSWORD\n"
         if args.info == "passwords" then 
             output = output + grabPasswords(client)
         end if

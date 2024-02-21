@@ -43,6 +43,20 @@ ClientManager.AddPartialClient = function(shell)
     self.clients.push(client)
 end function
 
+// Creats a tempory client for Auto Escalation
+ClientManager.CreateTempClient = function(shell)
+    client = new Client
+    client.ID = self.clients.len()
+    client.Type = "Temp"
+    client.Shell = shell
+    client.Computer = shell.host_computer()
+    client.PublicIp = shell.host_computer().public_ip()
+    client.LocalIp 	= shell.host_computer().local_ip()
+    client.HostName = shell.host_computer().get_name()
+    client.UserName = getUser(shell)
+    return client
+end function
+
 // Returns a client in the manager
 ClientManager.GetClient = function(clientIndex)
     if hasIndex(self.clients, clientIndex) then return self.clients[clientIndex]

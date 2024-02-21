@@ -30,7 +30,6 @@ grabMails = function(client)
         password = dictionary.run(mail.split(":")[1])
         output = output + client.ID + " " + username + " " + password + "\n"
     end for
-
 end function
 
 grabCommandCallback = function(args)

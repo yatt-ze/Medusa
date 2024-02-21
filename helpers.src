@@ -41,9 +41,9 @@ getUser = function(shell)
 end function
 
 _implantSource = "metax = include_lib(""/lib/metaxploit.so"")
-if not metax then metax = include_lib(current_path + ""metaxploit.so"")
 if not metax then metax = include_lib(current_path + ""/metaxploit.so"")
 metax.rshell_client("+ """" + get_shell().host_computer().public_ip()+ """" + ", 1222, ""bgprocess"")"
+
 createImplant = function()
     shell = get_shell()
     host = shell.host_computer()

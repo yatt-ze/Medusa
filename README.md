@@ -17,4 +17,7 @@ An rshell manager for the game Grey Hack
 ![Help](https://i.imgur.com/ncyvteP.png)
 
 ### TODO:
-- Write this todo list
+- Grabbing of Mission Files
+- Monitor Shells (Process / Filesystem Changes)
+- shell.launch command
+- Auto Escalation

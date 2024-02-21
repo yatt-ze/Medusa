@@ -13,5 +13,4 @@ An rshell manager for the game Grey Hack
 - Auto Cracking of NPC Passwords
 
 ### TODO:
-- Auto escalate to root shell
 - Write this todo list

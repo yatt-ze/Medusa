@@ -1,0 +1,38 @@
+runCallback = function(args)
+    if args.client_id == "all" then
+        for client in clientManager.GetClients()
+            print( ("Client (" + client.ID + ")").info() )
+            client.Shell.launch(args.script, args.parameter)
+        end for
+    else
+        client = clientManager.GetClient(args.client_id.val)
+        if not client then return print("<color=#FF0000>[!] There is no client with that ID</color>")
+        client.Shell.launch(args.script, args.parameter)
+    end if
+
+
+end function
+
+commandManager.registerCommand(Command.New({
+    "name": "run",
+    "description": "Runs a script on the client",
+    "parameters": [
+        Parameter.New({
+            "name": "client_id",
+            "examples": "0/all",
+            "required": true
+        }),
+        Parameter.New({
+            "name": "script",
+            "examples": "/bin/cat",
+            "required": true
+        }),
+        Parameter.New({
+            "name": "parameter",
+            "examples": "/etc/passwd",
+            "required": false,
+            "default": null
+        })
+    ],
+    "callback": @runCallback
+}))

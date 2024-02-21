@@ -96,12 +96,12 @@ AutoSpread.spread = function()
             else
                 upload = get_shell.scp("/lib/metaxploit.so", "/home/guest/", shell)
                 if typeof(upload) == "string" then 
-                    print("Error spreading too client ("+upload+")")
+                    print("Error spreading to client ("+upload+")")
                     return false
                 end if
                 upload = get_shell.scp(home_dir() + "/Config/Medusa/implant", "/home/guest/", shell)
                 if typeof(upload) == "string" then 
-                    print("Error spreading too client ("+upload+")")
+                    print("Error spreading to client ("+upload+")")
                     return false
                 end if
                 if shell.launch("/home/guest/implant") == 0 then

@@ -1,6 +1,8 @@
 # Medusa
 An rshell manager for the game Grey Hack
 
+![Main](https://i.imgur.com/yNqr3FQ.png)
+
 ### Features
 - General Management
   - List Processes
@@ -12,6 +14,7 @@ An rshell manager for the game Grey Hack
 - AutoSpreading
 - Auto Cracking of NPC Passwords
 
+![Help](https://i.imgur.com/ncyvteP.png)
+
 ### TODO:
-- Auto escalate to root shell
 - Write this todo list

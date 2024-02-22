@@ -1,37 +1,16 @@
 delClientAll = function()
-    clients = clientManager.GetClients()
-    for client in clients
-        host = client.Computer
-        list = host.show_procs().split(char(10))[1:]
-        for item in list
-            parsedItem = item.split(" ")
-            if parsedItem[4] == "bgprocess" then
-                client.Computer.close_program(parsedItem[1].val)
-            end if
-            if parsedItem[4] == "rshell_client" then
-                client.Computer.close_program(parsedItem[1].val)
-            end if
-        end for
-    end for
+    if clientManager.GetClients().len == 0 then return
+    
+    client = clientManager.clients.pop()
+    clientManager.RemoveClient(client)
+    delClientAll()
 end function
 
 delclientCallback = function(args)
     if args.client_id == "all" then return delClientAll()
-    
     client = clientManager.GetClient(args.client_id.val)
     if not client then return print("<color=#FF0000>[!] There is no client with that ID</color>")
-
-    host = client.Computer
-    list = host.show_procs().split(char(10))[1:]
-    for item in list
-        parsedItem = item.split(" ")
-        if parsedItem[4] == "bgprocess" then
-            client.Computer.close_program(parsedItem[1].val)
-        end if
-        if parsedItem[4] == "rshell_client" then
-            client.Computer.close_program(parsedItem[1].val)
-        end if
-    end for
+    clientManager.RemoveClient(client)
 end function
 
 commandManager.registerCommand(Command.New({

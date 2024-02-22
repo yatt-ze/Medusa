@@ -1,5 +1,5 @@
 if params.len == 1 and params[0] == "--debug" then globals.DEBUG = true else globals.DEBUG = false
-globals.VERSION = "1.1.0"
+globals.VERSION = "1.1.1"
 
 metax = include_lib("/lib/metaxploit.so")
 crypto = include_lib("/lib/crypto.so")
@@ -59,22 +59,14 @@ init = function()
 	end if
 end function
 
-checkForNewClients = function()
-	shells = rshell_server(metax)
-	if shells.len() != clientManager.GetFullClientCount() then
-		for shell in shells
-			clientManager.AddFullClient(shell)
-		end for
-	end if
-end function
-
 // Entrypoint for medusa
 main = function()
 	init()
 	commandManager.executeCommand("clear")
 	while true
+		clientManager.RefreshClients()
 		commandManager.executeCommand(user_input(active_user() + "@medusa:/# "))
-		if not globals.DEBUG then checkForNewClients()
+		//if not globals.DEBUG then checkForNewClients()
 	end while
 end function
 

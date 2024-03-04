@@ -52,7 +52,7 @@ init = function()
 		clientManager.AddPartialClient(shell)
 	else
 		shells = rshell_server(metax)
-		if typeof(shells) == "string" then exit(("[!] " + shells).colour(Colour.Red))
+		if typeof(shells) == "string" then exit(shells.error())
 		for shell in shells
 			clientManager.AddFullClient(shell)
 		end for
@@ -65,9 +65,11 @@ main = function()
 	commandManager.executeCommand("clear")
 	while true
 		clientManager.RefreshClients()
-		commandManager.executeCommand(user_input(active_user() + "@medusa:/# "))
-		//if not globals.DEBUG then checkForNewClients()
+		cmd = user_input(active_user() + "@medusa:/# ")
+		if cmd == "exit" then break
+		commandManager.executeCommand(cmd)
 	end while
+	return 0
 end function
 
-main()
+return main()

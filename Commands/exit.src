@@ -1,5 +1,6 @@
 exitCommandCallback = function(args)
-    exit("<color=#00FF00>[+] Exiting...</color>")
+    //Does Nothing, handled in main
+    return 
 end function
 commandManager.registerCommand(Command.New({
     "name": "exit",

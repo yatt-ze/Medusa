@@ -1,5 +1,5 @@
 if params.len == 1 and params[0] == "--debug" then globals.DEBUG = true else globals.DEBUG = false
-globals.VERSION = "1.1.1"
+globals.VERSION = "1.2.1"
 
 metax = include_lib("/lib/metaxploit.so")
 crypto = include_lib("/lib/crypto.so")
@@ -21,6 +21,7 @@ import_code("./AutoSpread/AutoSpread.src")
 commandManager = new CommandManager
 clientManager = new ClientManager
 dictionary = new Dictionary
+orsAPI = null
 
 import_code("./Commands/commands.src")
 
@@ -47,21 +48,30 @@ init = function()
 	print("Initializing Dictionary...".info())
 	dictionary.init()
 
+	if not globals.DEBUG then
+		print("Initializing Open Rshell API...".info())
+		orsAPI = getRshellAPI(metax)
+	end if
+
 	if globals.DEBUG then
 		shell = get_shell("root", "test")
 		clientManager.AddPartialClient(shell)
 	else
 		shells = rshell_server(metax)
-		if typeof(shells) == "string" then exit(shells.error())
+		if typeof(shells) == "string" then 
+			print(shells.error())
+			return false
+		end if
 		for shell in shells
 			clientManager.AddFullClient(shell)
 		end for
 	end if
+	return true
 end function
 
 // Entrypoint for medusa
 main = function()
-	init()
+	if not init() then return 1
 	commandManager.executeCommand("clear")
 	while true
 		clientManager.RefreshClients()

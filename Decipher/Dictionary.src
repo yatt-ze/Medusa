@@ -17,7 +17,10 @@ import_code("./Lists/list16.src")
 
 Dictionary = {}
 Dictionary.index = 0
-Dictionary.passwords = {}
+Dictionary.passwords = []
+Dictionary.rainbowTable = {}
+
+Dictionary.tableIsBuilt = false
 
 Dictionary.init = function()
     passwords = []
@@ -38,20 +41,29 @@ Dictionary.init = function()
     passwords = passwords + list15.split("\n")
     passwords = passwords + list16.split("\n")
 
-    allPasswords = {}
-    handleLowerCase = function(password)
-        lowerPass = lower(password)
-        allPasswords[md5(password)] = password
-        allPasswords[md5(lowerPass)] = lowerPass
-    end function
+    allPasswords = []
     for password in passwords
-        handleLowerCase(password.trim())
+        allPasswords.push(password.trim())
+        allPasswords.push(lower(password.trim()))
     end for
 
     self.passwords = allPasswords
 end function
 
+Dictionary.BuildRainbowTable = function()
+    for password in self.passwords
+        self.rainbowTable[md5(password)] = password
+    end for
+    self.tableIsBuilt = true
+end function
+
 Dictionary.run = function(hash)
-    if self.passwords.hasIndex(hash) then return self.passwords[hash]
+    if self.tableIsBuilt then
+        if self.rainbowTable.hasIndex(hash) then return self.rainbowTable[hash]
+    else
+        for password in self.passwords
+            if md5(password) == hash then return password
+        end for
+    end if
     return hash
 end function

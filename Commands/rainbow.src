@@ -1,0 +1,10 @@
+rainbowCommandCallback = function(args)
+    print("Building rainbow table".info())
+    dictionary.BuildRainbowTable()
+end function
+
+commandManager.registerCommand(Command.New({
+    "name": "rainbow",
+    "description": "Builds rainbow table of npc passwords for faster autocracking",
+    "callback": @ rainbowCommandCallback
+}))

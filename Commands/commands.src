@@ -24,7 +24,7 @@ helpCommandCallback = function(args)
                 for param in command.parameters
                     help = help + param.name + ","
                 end for
-                help = help + "\n"
+                help = help[:-1] + "\n"
             else
                 help = help + " N/A\n"
             end if

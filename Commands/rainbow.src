@@ -5,6 +5,6 @@ end function
 
 commandManager.registerCommand(Command.New({
     "name": "rainbow",
-    "description": "Builds rainbow table of npc passwords for faster autocracking",
+    "description": "Builds rainbow table of npc passwords",
     "callback": @ rainbowCommandCallback
 }))

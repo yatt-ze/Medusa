@@ -1,5 +1,5 @@
 if params.len == 1 and params[0] == "--debug" then globals.DEBUG = true else globals.DEBUG = false
-globals.VERSION = "1.2.1"
+globals.VERSION = "1.3.0"
 
 metax = include_lib("/lib/metaxploit.so")
 crypto = include_lib("/lib/crypto.so")
@@ -17,6 +17,7 @@ import_code("./Command/Command.src")
 import_code("./Command/Parameter.src")
 
 import_code("./AutoSpread/AutoSpread.src")
+import_code("./PseudoShell/PseudoShell.src")
 
 commandManager = new CommandManager
 clientManager = new ClientManager

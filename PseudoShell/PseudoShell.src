@@ -1,0 +1,32 @@
+PseudoShell = {}
+PseudoShell.Client = null
+
+PseudoShell.Run = function()
+    if not self.Client isa Client then return print("Client not set!".error())
+    
+    while true
+        p_command = user_input(self.Client.UserName + "@" + self.Client.HostName + "# ").trim().split(" ")
+        if p_command[0] == "" then continue
+        cmd = p_command[0]
+        arg = null
+        if p_command.len > 1 then arg = p_command[1]
+        if cmd == "help" then 
+            self.Client.Shell.launch("/bin/ls", "/bin")
+            continue
+        else if cmd == "clear" then 
+            clear_screen()
+            continue
+        end if
+        if cmd == "exit" then return
+
+        if arg == null then self.Client.Shell.launch("/bin/"+cmd)
+        if arg != null then self.Client.Shell.launch("/bin/"+cmd, arg)
+
+    end while
+end function
+
+PseudoShell.New = function(client)
+    ps = new PseudoShell
+    ps.Client = client
+    return ps
+end function

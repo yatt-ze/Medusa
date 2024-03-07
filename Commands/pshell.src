@@ -1,0 +1,18 @@
+pshellCallback = function(args)
+    client = clientManager.GetClient(args.client_id.val)
+    if not client then return print("<color=#FF0000>[!] There is no client with that ID</color>")
+    print(("Launching Pseudo Shell on Client " + client.ID).info())
+    PseudoShell.New(client).Run()
+end function
+commandManager.registerCommand(Command.New({
+    "name": "pshell",
+    "description": "Launches a pseudo shell (Doesn't Exit Medusa)",
+    "parameters": [
+        Parameter.New({
+            "name": "client_id",
+            "examples": "0",
+            "required": true
+        })
+    ],
+    "callback": @pshellCallback
+}))

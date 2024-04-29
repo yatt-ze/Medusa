@@ -10,7 +10,6 @@ import_code("./exit.src")
 import_code("./clients.src")
 import_code("./clear.src")
 import_code("./run.src")
-import_code("./add.src")
 import_code("./rainbow.src")
 
 

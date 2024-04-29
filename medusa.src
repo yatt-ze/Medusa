@@ -22,7 +22,6 @@ import_code("./PseudoShell/PseudoShell.src")
 commandManager = new CommandManager
 clientManager = new ClientManager
 dictionary = new Dictionary
-orsAPI = null
 
 import_code("./Commands/commands.src")
 
@@ -48,11 +47,6 @@ init = function()
 
 	print("Initializing Dictionary...".info())
 	dictionary.init()
-
-	if not globals.DEBUG then
-		print("Initializing Open Rshell API...".info())
-		orsAPI = getRshellAPI(metax)
-	end if
 
 	if globals.DEBUG then
 		shell = get_shell("root", "test")

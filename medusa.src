@@ -69,7 +69,7 @@ main = function()
 	if not init() then return 1
 	commandManager.executeCommand("clear")
 	while true
-		clientManager.RefreshClients()
+		//clientManager.RefreshClients()
 		cmd = user_input(active_user() + "@medusa:/# ")
 		if cmd == "exit" then break
 		commandManager.executeCommand(cmd)

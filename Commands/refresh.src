@@ -1,0 +1,9 @@
+refreshCommandCallback = function(args)
+    clientManager.RefreshClients()
+end function
+
+commandManager.registerCommand(Command.New({
+    "name": "refresh",
+    "description": "Refreshs Client List",
+    "callback": @refreshCommandCallback
+}))

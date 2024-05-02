@@ -16,7 +16,8 @@ clearCommandCallback = function(args)
     print("")
     print(info)
     print("")
-    clientsCommandCallback()
+    clientsCommandCallback(true)
+    return true
 end function
 commandManager.registerCommand(Command.New({
     "name": "clear",

@@ -1,0 +1,40 @@
+nmapCommandCallback = function(args)
+    ip = null
+    if args.ip == null then return print("No Ip address or client ID specified".error())
+    if is_valid_ip(args.ip) then 
+        ip = args.ip
+    else
+        client = clientManager.GetClient(args.ip.val)
+        if not client then return print("<color=#FF0000>[!] There is no client with that ID</color>")
+        ip = client.PublicIp
+    end if
+    pingable = get_shell().ping(ip)
+    print("Starting Nmap on " + ip)
+    if pingable then
+        router = get_router(ip)
+        if router then
+            ports = router.used_ports
+            print("ESSID " + router.essid_name + " BSSID " + router.bssid_name)
+            print("Kernel router version: " + router.kernel_version)
+
+            output = "\nLAN_IP PORT SERVICE VERSION\n"
+            for port in ports
+                output = output + port.get_lan_ip() + " " + port.port_number() + " " + router.port_info(port) + "\n"
+            end for
+            print(format_columns(output))
+        end if
+    end if
+    return ip
+end function
+commandManager.registerCommand(Command.New({
+    "name": "nmap",
+    "description": "Scans a public ip or client for open ports",
+    "parameters": [
+        Parameter.New({
+            "name": "ip",
+            "examples": "1.1.1.1 OR client ID",
+            "required": false
+        })
+    ],
+    "callback": @nmapCommandCallback
+}))

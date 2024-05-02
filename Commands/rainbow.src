@@ -1,6 +1,7 @@
 rainbowCommandCallback = function(args)
     print("Building rainbow table".info())
     dictionary.BuildRainbowTable()
+    return true
 end function
 
 commandManager.registerCommand(Command.New({

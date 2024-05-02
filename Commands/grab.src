@@ -68,6 +68,7 @@ grabCommandCallback = function(args)
         end if
         print(formatTable(output))
     end if
+    return true
 end function
 
 commandManager.registerCommand(Command.New({

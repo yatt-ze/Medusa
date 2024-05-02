@@ -6,6 +6,7 @@ spreadCallback = function(args)
 		end while
 		i = i + 1
 	end while
+    return true
 end function
 commandManager.registerCommand(Command.New({
     "name": "spread",

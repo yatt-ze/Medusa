@@ -9,6 +9,7 @@ delLogsCallback = function(args)
         if not client then return print("<color=#FF0000>[!] There is no client with that ID</color>")
         client.deleteLogs()
     end if
+    return true
 end function
 commandManager.registerCommand(Command.New({
     "name": "dellogs",

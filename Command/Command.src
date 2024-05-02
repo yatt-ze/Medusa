@@ -22,8 +22,7 @@ end function
 Command.execute = function(args)
     parameters = self.parseArgs(args)
     if parameters == false then return false
-    self.callback(parameters)
-    return true
+    return self.callback(parameters)
 end function
 
 Command.parseArgs = function(args)

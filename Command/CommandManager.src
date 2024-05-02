@@ -22,12 +22,70 @@ CommandManager.GetCommands = function()
     return self.commands
 end function
 
-// Executes a command
+// Parses command string with pipe into list of commands
+CommandManager.parsePipe = function(input)
+    output = []
+    current = ""
+    for i in range(0, input.len() - 1)
+        c = input[i]
+        if c != "|" then 
+            current = current + c
+        end if
+        if c == "|" or i == input.len() - 1 then 
+            output.push(current.trim())
+            current = ""
+        end if
+    end for
+    return output
+end function
+
+// Parses command string with & chain into list of commands
+CommandManager.parseChain = function(input)
+    output = []
+    current = ""
+    for i in range(0, input.len() - 1)
+        c = input[i]
+        if c != "&" then 
+            current = current + c
+        end if
+        if c == "&" or i == input.len() - 1 then 
+            output.push(current.trim())
+            current = ""
+        end if
+    end for
+    return output
+end function
+
+// Actually parses the command string proir to executing
 CommandManager.executeCommand = function(str)
-    command = str.split(" ")[0]
-    args = slice(str.split(" "), 1)
-    if command == "" then return
-    if not(hasIndex(self.commands,command)) or self.commands[command] == null then return print("<color=#FF0000>[!] " + command + " is not a vaild command</color>")
-    command = self.commands[command]
-    if not command.execute(args) then return print("<color=#FF0000>[!] Missing Parameter!</color>")
+    if str.indexOf("&") != null then
+        commands = self.parseChain(str)
+        for cmd in commands
+            self.executeCommand(cmd)
+        end for
+    else if str.indexOf("|") != null then
+        last_return = null
+        new_cmd = null
+        commands = self.parsePipe(str)
+        
+        for cmd in commands
+            new_cmd = cmd
+            if last_return != null then new_cmd = cmd + " " + last_return
+            last_return = self.executeCommand(new_cmd)
+            if last_return == -1 then return
+        end for
+    else
+        command = str.split(" ")[0]
+        args = slice(str.split(" "), 1)
+        if command == "" then return
+        if not(hasIndex(self.commands,command)) or self.commands[command] == null then return print("<color=#FF0000>[!] " + command + " is not a vaild command</color>")
+        command = self.commands[command]
+
+        result = command.execute(args)
+        if result == false then 
+            print("<color=#FF0000>[!] Missing Parameter!</color>")
+            return -1
+        end if
+        return result
+    end if
 end function

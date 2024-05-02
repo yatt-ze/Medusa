@@ -1,5 +1,6 @@
 refreshCommandCallback = function(args)
     clientManager.RefreshClients()
+    return true
 end function
 
 commandManager.registerCommand(Command.New({

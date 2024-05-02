@@ -1,6 +1,6 @@
 exitCommandCallback = function(args)
     //Does Nothing, handled in main
-    return 
+    return true 
 end function
 commandManager.registerCommand(Command.New({
     "name": "exit",

@@ -1,0 +1,11 @@
+ipgenCommandCallback = function(args)
+    ip = ipGenerate()
+    if not get_shell.ping(ip) then return ipgenCommandCallback()
+    print(("RANDOM IP => " + ip).colour("#00FFFF"))
+    return ip
+end function
+commandManager.registerCommand(Command.New({
+    "name": "ipgen",
+    "description": "Generates a random ip",
+    "callback": @ipgenCommandCallback
+}))

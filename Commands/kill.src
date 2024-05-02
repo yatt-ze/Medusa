@@ -2,7 +2,7 @@ killCallback = function(args)
     client = clientManager.GetClient(args.client_id.val)
     if not client then return print("<color=#FF0000>[!] There is no client with that ID</color>")
     client.Shell.host_computer().close_program(args.pid.val)
-
+    return true
 end function
 commandManager.registerCommand(Command.New({
     "name": "kill",

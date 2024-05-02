@@ -10,7 +10,7 @@ runCallback = function(args)
         client.Shell.launch(args.script, args.parameter)
     end if
 
-
+    return true
 end function
 
 commandManager.registerCommand(Command.New({

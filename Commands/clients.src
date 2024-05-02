@@ -1,11 +1,18 @@
-clientsCommandCallback = function(args)
+clientsCommandCallback = function(is_clear)
+    clients = clientManager.GetClients()
+    toShow = clients.len()
+    if toShow > 5 and is_clear then toShow = 5
+
+    print(("Showing " + toShow + "/" + clients.len() + " Clients").colour("#FF0000"))
     computers = "ID TYPE PUBLIC_IP LOCAL_IP USERNAME HOSTNAME\n"
-    for client in clientManager.GetClients()
+    for i in range(0, toShow - 1)
+        client = clients[i]
         computers = computers + client.ID + " " + client.Type + " " + client.PublicIp + " " + client.LocalIp + " " + client.UserName + " " + client.HostName + "\n"
     end for
     computers = formatTable(computers)
     print(computers)
     print()
+    return true
 end function
 commandManager.registerCommand(Command.New({
     "name": "clients",

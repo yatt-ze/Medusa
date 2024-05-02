@@ -3,6 +3,7 @@ pshellCallback = function(args)
     if not client then return print("<color=#FF0000>[!] There is no client with that ID</color>")
     print(("Launching Pseudo Shell on Client " + client.ID).info())
     PseudoShell.New(client).Run()
+    return true
 end function
 commandManager.registerCommand(Command.New({
     "name": "pshell",

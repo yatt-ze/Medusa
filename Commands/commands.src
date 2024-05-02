@@ -12,6 +12,8 @@ import_code("./clients.src")
 import_code("./clear.src")
 import_code("./run.src")
 import_code("./rainbow.src")
+import_code("./nmap.src")
+import_code("./ipgen.src")
 
 
 helpCommandCallback = function(args)
@@ -40,6 +42,7 @@ helpCommandCallback = function(args)
         end if
         print(command.help())
     end if
+    return true
 end function
 commandManager.registerCommand(Command.New({
     "name": "help",

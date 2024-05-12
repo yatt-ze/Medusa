@@ -1,5 +1,5 @@
 if params.len == 1 and params[0] == "--debug" then globals.DEBUG = true else globals.DEBUG = false
-globals.VERSION = "1.4.0"
+globals.VERSION = "1.5.0"
 
 metax = include_lib("/lib/metaxploit.so")
 crypto = include_lib("/lib/crypto.so")
@@ -7,7 +7,10 @@ crypto = include_lib("/lib/crypto.so")
 import_code("./Extensions/string.src")
 import_code("./helpers.src")
 
+import_code("./Json/json.src")
+
 import_code("./Decipher/Dictionary.src")
+import_code("./ExploitDB/exploitdb.src")
 
 import_code("./Client/ClientManager.src")
 import_code("./Client/Client.src")
@@ -16,6 +19,7 @@ import_code("./Command/CommandManager.src")
 import_code("./Command/Command.src")
 import_code("./Command/Parameter.src")
 
+import_code("./BreachKit/breachkit.src")
 import_code("./AutoSpread/AutoSpread.src")
 import_code("./PseudoShell/PseudoShell.src")
 
@@ -40,6 +44,11 @@ init = function()
 		host.create_folder(home_dir() + "/Config", "Medusa")
 	end if
 
+	if not host.File(home_dir() + "/Config/Medusa/database.med") then
+		print("Creating Exploit Database...".info())
+		ExploitDB.Create()
+	end if
+
 	if not host.File(home_dir() + "/Config/Medusa/implant") then
 		print("Building Implant...".info())
 		createImplant()
@@ -47,6 +56,9 @@ init = function()
 
 	print("Initializing Dictionary...".info())
 	dictionary.init()
+
+	print("Opening Exploit Database...".info())
+	ExploitDB.Open()
 
 	if globals.DEBUG then
 		shell = get_shell("root", "test")
@@ -67,13 +79,13 @@ end function
 // Entrypoint for medusa
 main = function()
 	if not init() then return 1
-	commandManager.executeCommand("clear")
+	commandManager.executeCommand("clear")	
 	while true
-		//clientManager.RefreshClients()
 		cmd = user_input(active_user() + "@medusa:/# ")
 		if cmd == "exit" then break
 		commandManager.executeCommand(cmd)
 	end while
+	ExploitDB.Save()
 	return 0
 end function
 

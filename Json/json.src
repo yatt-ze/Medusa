@@ -1,0 +1,135 @@
+Json = {}
+Json.index = null
+Json.debug = null
+
+Json.expect = function(expected, jsonString)
+    if jsonString[self.index] != expected then 
+        print("Expected '"+expected+"' but got '"+jsonString[self.index]+"' instead")
+        return false 
+    end if
+        
+    self.index = self.index + 1
+    return true
+end function
+
+Json.parseObject = function(jsonString)
+    if self.debug then print("\nParsing Object")
+    obj = {}
+    self.index = self.index + 1
+    while jsonString[self.index] != "}"
+        key = self.parseString(jsonString)
+        exp = self.expect(":", jsonString)
+        if exp == false then return exp
+        value = self.parseValue(jsonString)
+
+        if self.debug then print("Inserting into object: key="+key+" value="+value)
+        obj[key] = value
+
+        if jsonString[self.index] == "," then self.index = self.index + 1
+    end while
+    self.index = self.index + 1
+    if self.debug then print("Obj = " + obj)
+    return obj
+end function
+
+Json.parseArray = function(jsonString)
+    if self.debug then print("\nParsing Array")
+    arr = []
+    self.index = self.index + 1
+    while jsonString[self.index] != "]"
+        value = self.parseValue(jsonString)
+        if self.debug then print("Pushing "+value+" to array")
+        arr.push(value)
+
+        if jsonString[self.index] == "," then self.index = self.index + 1
+    end while
+    self.index = self.index + 1
+    if self.debug then print("Arr = " + arr)
+    return arr
+end function
+
+Json.parseString = function(jsonString)
+    if self.debug then print("\nParsing String")
+    self.index = self.index + 1
+    start = self.index
+    while jsonString[self.index] != """"
+        self.index = self.index + 1
+    end while
+    finish = self.index
+    self.index = self.index + 1
+    if self.debug then print("String = " + jsonString[start:finish])
+    return jsonString[start:finish]
+end function
+
+Json.parseNumber = function(jsonString)
+    if self.debug then print("\nParsing Number")
+    start = self.index
+    while self.index < jsonString.len() and ["-","0","1","2","3","4","5","6","7","8","9"].indexOf(jsonString[self.index]) != null
+        self.index = self.index + 1
+    end while
+    finish = self.index
+    if self.debug then print("Number = " + jsonString[start:finish].val())
+    return jsonString[start:finish].val()
+end function
+
+Json.parseValue = function(jsonString)
+    if jsonString[self.index] == "{" then 
+        return self.parseObject(jsonString)
+    else if jsonString[self.index] == "[" then 
+        return self.parseArray(jsonString)
+    else if jsonString[self.index] == """" then 
+        return self.parseString(jsonString)
+    else if ["-","0","1","2","3","4","5","6","7","8","9"].indexOf(jsonString[self.index]) != null then 
+        return self.parseNumber(jsonString)
+    else if jsonString[self.index:self.index + 4] == "true" then
+        self.index = self.index + 4
+        return true
+    else if jsonString[self.index:self.index + 5] == "false" then
+        self.index = self.index + 5
+        return false
+    else if jsonString[self.index:self.index + 4] == "null" then
+        self.index = self.index + 4
+        return null
+    else return print("Invaild Json!")
+    end if
+end function
+
+Json.Serialize = function(value, debug = false)
+    self.debug = debug
+
+    if value isa string then
+        if self.debug then print("Serializing String => "+ value)
+        return """" + value + """"
+    else if value isa number then
+        if self.debug then print("Serializing Number => "+ value)
+        return "" + value + ""
+    else if value isa list then
+        if self.debug then print("Serializing List => "+ value)
+        serializedList = "["
+        for o in value
+            serializedList = serializedList + self.Serialize(o, debug) + ","
+        end for
+        serializedList = serializedList[:-1]
+        serializedList = serializedList + "]"
+        return serializedList
+    else if value isa map then
+        if self.debug then print("Serializing Map => "+ value)
+        serializedMap = "{"
+        for kv in value
+            serializedMap = serializedMap + """" + kv.key + """:" + self.Serialize(kv.value, debug) + ","
+        end for
+        serializedMap = serializedMap[:-1]
+        serializedMap = serializedMap + "}"
+        return serializedMap
+    else
+    else return print("Failed to Serialize object to Json!")
+    end if
+end function
+
+// Returns parsed json or Error object
+Json.Deserialize = function(jsonString, debug = false)
+    self.index = 0
+    self.debug = debug
+    jsonString = jsonString.stripWhitespace()
+    return self.parseValue(jsonString)
+end function

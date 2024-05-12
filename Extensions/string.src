@@ -13,3 +13,21 @@ end function
 string.success = function()
     return ("[+] " + self).colour("#00FF00")
 end function
+
+string.stripWhitespace = function()
+    newString = ""
+
+    if self.len() == 0 then return newString
+
+    for i in range(0, self.len() - 1)
+        if self[i].code() == 9 then continue  // TAB
+        if self[i].code() == 10 then continue // Line Feed
+        if self[i].code() == 11 then continue // Vertical Tab
+        if self[i].code() == 12 then continue // Form Feed
+        if self[i].code() == 13 then continue // Carriage Return
+        if self[i].code() == 32 then continue // Space
+        newString = newString + self[i]
+    end for
+
+    return newString
+end function

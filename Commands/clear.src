@@ -1,8 +1,7 @@
 clearCommandCallback = function(args)
-    clear_screen()
-    info = "CREATED BY: YATTAZE | <color=#00FF00>VERSION " + globals.VERSION + "</color> | <color=#FFFF00>CLIENTS: "+clientManager.GetClients().len+"</color>"
+    info = "CREATED BY: YATTAZE | <color=#00FF00>VERSION: " + globals.VERSION + "</color> | <color=#FFFF00>CLIENTS: "+clientManager.GetClients().len+"</color> | <color=#00FFFF>EXPLOITS: "+ExploitDB.exploitCount+"</color>"
     if globals.DEBUG then info = info + " | <color=#FF0000>DEBUG MODE ACTIVE</color>"
-    clear_screen()
+    if not globals.DEBUG then clear_screen()
     print("<color=#FF0000>                                                                              </color>")
     print("<color=#FF0000>                                         88                                   </color>")
     print("<color=#FF0000>                                         88                                   </color>")

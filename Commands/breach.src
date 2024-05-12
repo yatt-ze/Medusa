@@ -1,0 +1,61 @@
+breachCommandCallback = function(args)
+    if not is_valid_ip(args.ip_addr) then return print("Specified IP address is not valid".error())
+    
+    bk = BreachKit.New(args.ip_addr, args.port.val)
+    if not bk isa BreachKit then return
+
+    output = "ID LIBRARY VERSION MEMORY%ADDRESS VALUE\n"
+    exploits = bk.GetExploits()
+    options = {}
+    id = 0
+    for mem in exploits
+        address = mem.key
+        for value in mem.value
+            options[id] = {"address": address, "value": value}
+            output = output + id + " " + bk.dump.lib_name + " " + bk.dump.version + " " + address + " " + value + "\n"
+            id = id + 1
+        end for
+    end for
+    output = output + "X " + bk.dump.lib_name + " " + bk.dump.version + " HAIL%MARY HAIL%MARY\n"
+    print(formatTable(output))
+    
+    selection = user_input("[ID] |>", false, true)
+    if selection == "X".lower() then
+        for mem in exploits
+            address = mem.key
+            for value in mem.value
+                result = bk.RunExploit(address, value)
+                if result != false then
+                    clientManager.AddPartialClient(result)
+                    return true
+                end if
+            end for
+        end for
+    else
+        address = options[selection.val].address
+        value = options[selection.val].value
+        result = bk.RunExploit(address, value)
+        if result != false then
+            clientManager.AddPartialClient(result)
+            return true
+        end if
+    end if
+    return true
+end function
+commandManager.registerCommand(Command.New({
+    "name": "breach",
+    "description": "Attempts to exploit a remote endpoint",
+    "parameters": [
+        Parameter.New({
+            "name": "ip_addr",
+            "examples": "1.1.1.1",
+            "required": true
+        }),
+        Parameter.New({
+            "name": "port",
+            "examples": "22",
+            "required": true
+        })
+    ],
+    "callback": @breachCommandCallback
+}))

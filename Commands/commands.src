@@ -14,6 +14,8 @@ import_code("./run.src")
 import_code("./rainbow.src")
 import_code("./nmap.src")
 import_code("./ipgen.src")
+import_code("./breach.src")
+import_code("./exploits.src")
 
 
 helpCommandCallback = function(args)

@@ -1,0 +1,93 @@
+BreachKit = {}
+
+BreachKit.ip_addr = null
+BreachKit.port = null
+BreachKit.netSession = null
+BreachKit.dump = null
+
+BreachKit.New = function(ip_addr, port)
+    bk = new BreachKit
+    bk.ip_addr = ip_addr
+    bk.port = port
+
+    ns = metax.net_use(ip_addr, port)
+    bk.netSession = ns
+    if not bk.netSession then return print("Cannot get net session".error())
+    
+    dp = ns.dump_lib()
+    bk.dump = dp
+    if not bk.dump then return print("Cannot dump remote library".error())
+
+    return bk
+end function
+
+BreachKit.RunExploit = function(mem_addr, value)
+    result = self.dump.overflow(mem_addr, value)
+    if typeof(result) != "shell" then
+        print("Result was not a shell!".info())
+        return false
+    end if
+    print(("Successfully gained shell on " + self.ip_addr).success())
+    return result
+end function
+
+BreachKit.GetExploits = function()
+    db_exploits = ExploitDB.GetExploits(self.dump.lib_name, self.dump.version)
+    if db_exploits != false then 
+        print(("Exploits found in database for " + self.dump.lib_name + " v" + self.dump.version).success())
+        return db_exploits
+    end if
+
+
+    exploits = {}
+    print(("Scanning " + self.dump.lib_name + " v" + self.dump.version + " for exploits").info())
+    addresses = metax.scan(self.dump)
+    for address in addresses
+        exploits[address] = []
+        data = metax.scan_address(self.dump, address)
+        strings = data.split("Unsafe check: ")
+        for string in strings
+            if string == strings[0] then continue
+            value = string[string.indexOf("<b>")+3:string.indexOf("</b>")]
+
+            ExploitDB.AddExploit(self.dump.lib_name, self.dump.version, address, value)
+            exploits[address].push(value)
+        end for
+    end for
+    return exploits
+end function
+
+BreachKit.Persist = function(shell)
+    result = null
+    if globals.DEBUG then
+        clientManager.AddPartialClient(shell)
+        print("<color=#FFFF00>[DEBUG] Spread to </color><color=#808080>" + self.ip_addr + "</color>")
+        return true
+    else
+        upload = get_shell.scp("/lib/metaxploit.so", "/home/guest/", shell)
+        if typeof(upload) == "string" then 
+            print("Error spreading to client ("+upload+")")
+            return false
+        end if
+        upload = get_shell.scp(home_dir() + "/Config/Medusa/implant", "/home/guest/", shell)
+        if typeof(upload) == "string" then 
+            print("Error spreading to client ("+upload+")")
+            return false
+        end if
+        
+        rootPassword = clientManager.CreateTempClient(shell).getUserPassword("root")
+        if rootPassword != null then 
+            result = shell.launch("/home/guest/implant", rootPassword)
+        else
+            result = shell.launch("/home/guest/implant")
+        end if
+        if result == 0 then
+            clientManager.AddPartialClient(shell)
+            print("<color=#FFFF00>[PARTIAL] Spread to </color><color=#808080>" + self.ip_addr + "</color>")
+            return true
+        else
+            print("<color=#00FF00>[FULL] Spread to </color><color=#808080>" + self.ip_addr + "</color>")
+            return true
+        end if
+    end if
+end function

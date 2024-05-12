@@ -17,9 +17,11 @@ nmapCommandCallback = function(args)
             print("ESSID " + router.essid_name + " BSSID " + router.bssid_name)
             print("Kernel router version: " + router.kernel_version)
 
-            output = "\nLAN_IP PORT SERVICE VERSION\n"
+            output = "\nLAN_IP PORT STATUS SERVICE VERSION\n"
             for port in ports
-                output = output + port.get_lan_ip() + " " + port.port_number() + " " + router.port_info(port) + "\n"
+                state = "open"
+                if port.is_closed() then state = "closed"
+                output = output + port.get_lan_ip() + " " + port.port_number() + " " + state + " " + router.port_info(port) + "\n"
             end for
             print(format_columns(output))
         end if

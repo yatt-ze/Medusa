@@ -121,7 +121,6 @@ Json.Serialize = function(value, debug = false)
         serializedMap = serializedMap[:-1]
         serializedMap = serializedMap + "}"
         return serializedMap
-    else
     else return print("Failed to Serialize object to Json!")
     end if
 end function
